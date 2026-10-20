@@ -1,0 +1,10 @@
+{
+  "title": "Invoice API (IDOR)",
+  "language": "python",
+  "runner": "server",
+  "starterFile": "vulnerable.py",
+  "exploitHint": "You are alice (user #1). Her invoices are 101 and 103. What happens if you ask for 102?",
+  "exploitForm": [
+    { "name": "invoice_id", "label": "GET /api/invoices/:id  -  invoice id", "default": "101" }
+  ]
+}

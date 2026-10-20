@@ -1,0 +1,47 @@
+{
+  "track": {
+    "slug": "web-security",
+    "title": "Web Security",
+    "description": "Break it, understand it, fix it. Three OWASP Top 10 flaws taught with real code."
+  },
+  "badges": [
+    { "slug": "first-steps", "name": "First Steps", "description": "Completed your first lesson.", "icon": "🚀" },
+    { "slug": "on-fire", "name": "On Fire", "description": "Learned 3 days in a row.", "icon": "🔥" },
+    { "slug": "sql-slayer", "name": "SQL Slayer", "description": "Finished the SQL Injection module.", "icon": "🗡️" },
+    { "slug": "xss-hunter", "name": "XSS Hunter", "description": "Finished the Cross-Site Scripting module.", "icon": "🎯" },
+    { "slug": "idor-inspector", "name": "IDOR Inspector", "description": "Finished the IDOR module.", "icon": "🔎" },
+    { "slug": "security-champion", "name": "Security Champion", "description": "Completed every lesson in the platform.", "icon": "🏆" }
+  ],
+  "modules": [
+    {
+      "slug": "sql-injection",
+      "title": "SQL Injection",
+      "description": "A01/A03 Injection: why string-built queries let attackers rewrite your SQL.",
+      "badge": "sql-slayer",
+      "lessons": [
+        { "slug": "sqli-intro", "title": "How SQL injection works", "file": "sqli-intro.md", "type": "reading", "xp": 50 },
+        { "slug": "sqli-challenge", "title": "Challenge: break and fix the login", "file": "sqli-challenge.md", "type": "server-challenge", "challenge": "sqli-login", "xp": 150 }
+      ]
+    },
+    {
+      "slug": "xss",
+      "title": "Cross-Site Scripting (XSS)",
+      "description": "A03 Injection: when user input becomes running JavaScript in someone else's browser.",
+      "badge": "xss-hunter",
+      "lessons": [
+        { "slug": "xss-intro", "title": "How XSS works", "file": "xss-intro.md", "type": "reading", "xp": 50 },
+        { "slug": "xss-challenge", "title": "Challenge: stop the comment hijack", "file": "xss-challenge.md", "type": "client-challenge", "challenge": "xss-comment", "xp": 150 }
+      ]
+    },
+    {
+      "slug": "idor",
+      "title": "IDOR / Broken Access Control",
+      "description": "A01 Broken Access Control: changing an ID in the URL to read someone else's data.",
+      "badge": "idor-inspector",
+      "lessons": [
+        { "slug": "idor-intro", "title": "How IDOR works", "file": "idor-intro.md", "type": "reading", "xp": 50 },
+        { "slug": "idor-challenge", "title": "Challenge: lock down the invoice API", "file": "idor-challenge.md", "type": "server-challenge", "challenge": "idor-invoice", "xp": 150 }
+      ]
+    }
+  ]
+}

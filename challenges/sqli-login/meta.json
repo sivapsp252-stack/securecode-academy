@@ -1,0 +1,11 @@
+{
+  "title": "Vulnerable login form",
+  "language": "python",
+  "runner": "server",
+  "starterFile": "vulnerable.py",
+  "exploitHint": "Try the username  ' OR 1=1 --  with any password.",
+  "exploitForm": [
+    { "name": "username", "label": "Username", "default": "" },
+    { "name": "password", "label": "Password", "default": "", "type": "password" }
+  ]
+}

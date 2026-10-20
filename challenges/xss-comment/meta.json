@@ -1,0 +1,10 @@
+{
+  "title": "Comment widget (stored XSS)",
+  "language": "javascript",
+  "runner": "browser",
+  "starterFile": "vulnerable.js",
+  "exploitHint": "Post this comment:  <img src=x onerror=alert('XSS')>",
+  "exploitForm": [
+    { "name": "payload", "label": "Your comment", "default": "" }
+  ]
+}

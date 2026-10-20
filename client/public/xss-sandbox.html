@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>xss sandbox</title>
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 12px; color: #14213d; }
+  .comment { border-left: 3px solid #1f8a7d; padding: 6px 10px; background: #f1f5f9; }
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script>
+(function () {
+  var fired = 0;
+  window.alert = window.confirm = window.prompt = function () { fired++; };
+  var BAD = /^(script|img|svg|iframe|object|embed|link|style|math|form|input|button|video|audio|source|details|base|meta)$/i;
+
+  function danger(root) {
+    var bad = [];
+    root.querySelectorAll('*').forEach(function (el) {
+      if (BAD.test(el.tagName)) bad.push('<' + el.tagName.toLowerCase() + '>');
+      for (var i = 0; i < el.attributes.length; i++) {
+        var a = el.attributes[i];
+        if (/^on/i.test(a.name)) bad.push(el.tagName.toLowerCase() + ' ' + a.name);
+        if (/^(href|src|xlink:href)$/i.test(a.name) && /^\s*javascript:/i.test(a.value)) bad.push('javascript: URL');
+      }
+    });
+    return bad;
+  }
+  var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  window.addEventListener('message', async function (e) {
+    var d = e.data;
+    if (!d || d.kind !== 'run') return;
+    var reply = function (o) { o.kind = 'result'; o.id = d.id; parent.postMessage(o, '*'); };
+    var fn;
+    try {
+      fn = new Function(d.code + '\n;return typeof renderComment === "function" ? renderComment : null;')();
+    } catch (err) { return reply({ error: 'Your code could not run: ' + err.message }); }
+    if (!fn) return reply({ error: 'Define a function named renderComment(userInput).' });
+
+    var out = document.getElementById('out');
+    var results = [];
+    for (var i = 0; i < d.cases.length; i++) {
+      var c = d.cases[i];
+      fired = 0; out.innerHTML = '';
+      try { out.innerHTML = String(fn(c.payload)); }
+      catch (err) { results.push({ name: c.name, passed: false, detail: 'renderComment threw: ' + err.message }); continue; }
+      await sleep(c.type === 'demo' ? 500 : 300);
+      var bad = danger(out);
+      var r = { name: c.name, fired: fired > 0, danger: bad };
+      if (c.type === 'attack') {
+        r.passed = fired === 0 && bad.length === 0;
+        r.detail = r.passed ? 'Rendered harmlessly.' : (fired ? 'Script executed (alert fired).' : 'Dangerous markup survived: ' + bad.join(', '));
+      } else if (c.type === 'benign') {
+        r.passed = bad.length === 0 && out.textContent.indexOf(c.payload) !== -1;
+        r.detail = r.passed ? 'Displayed correctly.' : 'A normal comment must appear exactly as typed.';
+      } else {
+        r.passed = null;
+        r.detail = fired ? 'XSS executed' : (bad.length ? 'Dangerous markup injected (' + bad.join(', ') + ')' : 'Comment shown as plain text');
+      }
+      results.push(r);
+    }
+    reply({ results: results });
+  });
+})();
+</script>
+</body>
+</html>
